@@ -239,6 +239,7 @@ const CoachingEngine = ({ data }) => {
 // --- VUE DÉTAIL DE SECTION ---
 const SectionDetail = ({ section, onBack, onUpdateStatus, onAddItem, onDeleteItem, onFileUpload, onRemoveFile }) => {
   const [newItemText, setNewItemText] = useState("");
+  const [uploadingId, setUploadingId] = useState(null);
   const Icon = IconMap[section.iconName] || FileText;
 
   const handleAddItem = (e) => {
@@ -253,6 +254,17 @@ const SectionDetail = ({ section, onBack, onUpdateStatus, onAddItem, onDeleteIte
     if (current === 'missing') return 'in_progress';
     if (current === 'in_progress') return 'completed';
     return 'missing';
+  };
+
+  const handleLocalUpload = (itemId, e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingId(itemId);
+    // Délai artificiel pour le feedback visuel (UX)
+    setTimeout(() => {
+      onFileUpload(section.id, itemId, file);
+      setUploadingId(null);
+    }, 1500);
   };
 
   return (
@@ -307,17 +319,26 @@ const SectionDetail = ({ section, onBack, onUpdateStatus, onAddItem, onDeleteIte
 
             <div className="flex items-center gap-2 md:justify-end">
               {!item.file ? (
-                <label className="cursor-pointer p-2 bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 rounded-md transition-colors flex items-center gap-2 text-xs font-semibold whitespace-nowrap shadow-sm">
-                  <UploadCloud className="w-4 h-4" />
-                  <span>Joindre scan (PDF/Img)</span>
-                  <input type="file" className="hidden" onChange={(e) => onFileUpload(section.id, item.id, e)} accept=".pdf,image/*" />
+                <label className={`cursor-pointer p-2 border rounded-md transition-colors flex items-center gap-2 text-xs font-semibold whitespace-nowrap shadow-sm ${uploadingId === item.id ? 'bg-slate-100 text-slate-500 border-slate-200 cursor-wait' : 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100'}`}>
+                  {uploadingId === item.id ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />
+                      <span>Exportation...</span>
+                    </>
+                  ) : (
+                    <>
+                      <UploadCloud className="w-4 h-4" />
+                      <span>Joindre scan (PDF/Img)</span>
+                    </>
+                  )}
+                  <input type="file" className="hidden" disabled={uploadingId === item.id} onChange={(e) => handleLocalUpload(item.id, e)} accept=".pdf,image/*" />
                 </label>
               ) : (
                 <div className="flex items-center bg-slate-100 rounded-md border border-slate-200 px-3 py-1.5 gap-2 max-w-[200px] shadow-sm">
                   <FileText className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="text-xs text-slate-700 font-medium truncate" title={item.file.name}>
+                  <a href={item.file.data} download={item.file.name} target="_blank" rel="noreferrer" className="text-xs text-blue-700 font-medium truncate cursor-pointer hover:underline hover:text-blue-900" title={item.file.name}>
                     {item.file.name}
-                  </span>
+                  </a>
                   <button
                     onClick={() => onRemoveFile(section.id, item.id)}
                     className="p-1 ml-1 rounded hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition-colors shrink-0"
@@ -741,8 +762,7 @@ export default function App() {
     saveToLocalDB(newData);
   };
 
-  const handleFileUpload = (sectionId, itemId, e) => {
-    const file = e.target.files[0];
+  const handleFileUpload = (sectionId, itemId, file) => {
     if (!file) return;
 
     // Convert to Base64 to save in IndexedDB
