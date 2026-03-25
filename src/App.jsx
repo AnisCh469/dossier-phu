@@ -19,101 +19,103 @@ const INITIAL_DATA = {
   score: {
     total_estimatif: 0,
     target_total: 100,
-    note_finale_estimee: 0 // Sur 20
+    note_finale_estimee: 0
   },
   sections: [
     {
-      id: 'titres',
-      title: 'I. Titres et Diplômes',
-      subtitle: 'Coefficient: 10% (Max 10 pts)',
-      iconName: 'GraduationCap',
-      color: 'text-indigo-900',
-      borderColor: 'border-l-indigo-900',
+      id: 'anciennete',
+      title: 'I. Ancienneté dans le grade',
+      subtitle: 'Coefficient: 1 (8 pts / 4 ans)',
+      iconName: 'Clock',
+      color: 'text-slate-800',
+      borderColor: 'border-l-slate-800',
+      categories: [
+        { id: 'anc_base', label: 'Ancienneté de base (4 ans révolus)', maxPoints: 8, color: 'bg-slate-600' },
+        { id: 'anc_sup', label: 'Années supplémentaires', maxPoints: 12, color: 'bg-slate-400' },
+      ],
       items: [
-        { id: 101, label: "Doctorat en Médecine", status: "missing", date: null, file: null, required: true },
-        { id: 102, label: "Diplôme de Spécialité Médicale", status: "missing", date: null, file: null, required: true },
-        { id: 103, label: "Doctorat en Sciences (Thèse ès-science)", status: "missing", date: null, file: null, optional: true },
-        { id: 104, label: "Mastère de recherche (M1+M2)", status: "missing", date: null, file: null, optional: true },
-        { id: 105, label: "CEC de Pédagogie Médicale (Recommandé)", status: "missing", date: null, file: null, optional: true },
+        { id: 1001, label: "Attestation d'exercice effectif (4 ans minimum)", status: "missing", date: null, file: null, required: true, category: 'anc_base' },
+        { id: 1002, label: "Années supplémentaires (attestations additionnelles)", status: "missing", date: null, file: null, category: 'anc_sup' },
       ]
     },
     {
-      id: 'recherche',
-      title: 'II. Activités de Recherche',
-      subtitle: 'Coefficient: 25% (Publications, Congrès)',
+      id: 'titres_travaux',
+      title: 'II. Titres, Travaux et Publications',
+      subtitle: 'Coefficient: 1 (Publications 14 pts, Comms 6 pts)',
       iconName: 'BookOpen',
       color: 'text-blue-900',
       borderColor: 'border-l-blue-900',
+      categories: [
+        { id: 'pub', label: 'Publications Scientifiques',    maxPoints: 14, color: 'bg-blue-700' },
+        { id: 'comm', label: 'Communications (quanti + quali)', maxPoints: 6,  color: 'bg-blue-400' },
+        { id: 'ethique', label: 'Éthique et Prérequis',      maxPoints: null, color: 'bg-rose-500' },
+      ],
       items: [
-        { id: 201, label: "Article Original Q1 (1er, 2ème ou Dernier Auteur)", status: "missing", date: null, file: null },
-        { id: 202, label: "Article Original Q2 (1er, 2ème ou Dernier Auteur)", status: "missing", date: null, file: null },
-        { id: 203, label: "Article Original Q3/Q4", status: "missing", date: null, file: null },
-        { id: 204, label: "Communication Orale Internationale (Indexée)", status: "missing", date: null, file: null },
-        { id: 205, label: "Preuve soumission et approbation Comité d'Éthique", status: "missing", date: null, file: null, required: true }, // Crucial selon JORT
+        { id: 2000, label: "Doctorat en Médecine (Texte intégral)",                         status: "missing", date: null, file: null, required: true, category: 'ethique' },
+        { id: 2001, label: "Publications Scientifiques Indexées — avec IF et Scopus (Q1/Q2)", status: "missing", date: null, file: null, required: true, category: 'pub' },
+        { id: 2002, label: "Communications Quantitatives (3 pts) — max 15/an",               status: "missing", date: null, file: null, category: 'comm' },
+        { id: 2003, label: "Communications Qualitatives (3 pts) — 10 comms sélectionnées",  status: "missing", date: null, file: null, required: true, category: 'comm' },
+        { id: 2004, label: "Fiches d'auto-analyse des 10 communications sélectionnées",      status: "missing", date: null, file: null, required: true, category: 'comm' },
+        { id: 2005, label: "Preuve soumission et approbation Comité d'Éthique",             status: "missing", date: null, file: null, required: true, category: 'ethique' },
       ]
     },
     {
       id: 'pedagogie',
       title: 'III. Activités Pédagogiques',
-      subtitle: 'Coefficient: 22% (Encadrement, Outils)',
+      subtitle: 'Coefficient: 1',
       iconName: 'Users',
       color: 'text-teal-800',
       borderColor: 'border-l-teal-800',
+      categories: [
+        { id: 'docs', label: 'Documents pédagogiques',             maxPoints: null, color: 'bg-teal-600' },
+        { id: 'encadrement', label: 'Encadrement (Thèses/Mémoires)', maxPoints: null, color: 'bg-teal-400' },
+        { id: 'seminaires', label: 'Séminaires et Enseignement',    maxPoints: null, color: 'bg-teal-300' },
+      ],
       items: [
-        { id: 301, label: "Attestation Direction Thèse de Médecine (Soutenue)", status: "missing", date: null, file: null },
-        { id: 302, label: "Création de Mini-module d'auto-apprentissage (MMD)", status: "missing", date: null, file: null },
-        { id: 303, label: "Production d'ECOS / Vignettes Cliniques", status: "missing", date: null, file: null },
+        { id: 3001, label: "Productions de documents pédagogiques validés par la faculté", status: "missing", date: null, file: null, category: 'docs' },
+        { id: 3002, label: "Attestation Direction Thèse de Médecine ou Mémoire",           status: "missing", date: null, file: null, category: 'encadrement' },
+        { id: 3003, label: "Séminaires pédagogiques (participation, production, animation)", status: "missing", date: null, file: null, category: 'seminaires' },
+        { id: 3004, label: "Enseignement universitaire (attesté par la faculté)",           status: "missing", date: null, file: null, required: true, category: 'seminaires' },
+        { id: 3005, label: "Enseignement post-universitaire et conférences",                status: "missing", date: null, file: null, category: 'seminaires' },
       ]
     },
     {
       id: 'responsabilites',
-      title: 'IV. Responsabilités Sanitaires',
-      subtitle: 'Coefficient: 7% (Administration, Comités)',
+      title: 'IV. Responsabilités Universitaires et Hospitalières',
+      subtitle: 'Coefficient: 1 (Univ. sur 10, Rech. sur 6, Admin. sur 4)',
       iconName: 'Award',
       color: 'text-purple-800',
       borderColor: 'border-l-purple-800',
+      categories: [
+        { id: 'univ',  label: 'Responsabilités Universitaires', maxPoints: 10, color: 'bg-purple-700' },
+        { id: 'rech',  label: 'Responsabilités de Recherche',   maxPoints: 6,  color: 'bg-purple-500' },
+        { id: 'admin', label: 'Responsabilités Administratives', maxPoints: 4,  color: 'bg-purple-300' },
+      ],
       items: [
-        { id: 401, label: "Attestation d'exercice effectif (3 ans min. en tant que MCA)", status: "missing", date: null, file: null, required: true },
-        { id: 402, label: "Membre commission médicale / scientifique locale", status: "missing", date: null, file: null },
-        { id: 403, label: "Direction d'unité/laboratoire de recherche", status: "missing", date: null, file: null, optional: true },
+        { id: 4001, label: "Responsabilités universitaires (Doyen, Dir. Études, etc.)",    status: "missing", date: null, file: null, category: 'univ' },
+        { id: 4002, label: "Responsabilités de Recherche (Dir. Laboratoire, Unité)",       status: "missing", date: null, file: null, category: 'rech' },
+        { id: 4003, label: "Responsabilités Administratives (Chef de service, etc.)",      status: "missing", date: null, file: null, category: 'admin' },
+        { id: 4004, label: "Attestation d'exercice administratif (1 an minimum)",          status: "missing", date: null, file: null, required: true, category: 'admin' },
       ]
     },
     {
       id: 'epreuves',
-      title: 'V & VI. Épreuves JORT',
-      subtitle: 'Coefficient: 26% (Pédagogique et Pratique)',
+      title: 'V. Épreuves JORT et Dossier Administratif',
+      subtitle: 'Coefficient Pédagogique/Pratique et Documents',
       iconName: 'BrainCircuit',
       color: 'text-rose-800',
       borderColor: 'border-l-rose-800',
+      categories: [
+        { id: 'epreuves_oral', label: 'Épreuves Orales / Pratiques', maxPoints: null, color: 'bg-rose-600' },
+        { id: 'admin_doc',    label: 'Documents Administratifs',     maxPoints: null, color: 'bg-rose-400' },
+      ],
       items: [
-        { id: 501, label: "Préparation Présentation Pédagogique (Slides / Abstract)", status: "missing", date: null, file: null },
-        { id: 502, label: "Préparation Épreuve Pratique (Cas clinique / Patient)", status: "missing", date: null, file: null },
-      ]
-    },
-    {
-      id: 'regions',
-      title: 'VII. Engagement Régional',
-      subtitle: 'Coefficient: 10% (Promotion sanitaire, Régions)',
-      iconName: 'MapPin',
-      color: 'text-amber-700',
-      borderColor: 'border-l-amber-700',
-      items: [
-        { id: 601, label: "Attestation d'exercice dans une région prioritaire (Optionnel)", status: "missing", date: null, file: null, optional: true },
-        { id: 602, label: "Participation missions de santé publique nationales", status: "missing", date: null, file: null, optional: true },
-      ]
-    },
-    {
-      id: 'administratif',
-      title: 'Dossier Administratif',
-      subtitle: 'Constitution physique et numérique (Pré-requis)',
-      iconName: 'FileText',
-      color: 'text-slate-600',
-      borderColor: 'border-l-slate-500',
-      items: [
-        { id: 701, label: "Notice Individuelle (Note de synthèse)", status: "missing", date: null, file: null, required: true },
-        { id: 702, label: "Rapport anti-plagiat des publications", status: "missing", date: null, file: null, required: true },
-        { id: 703, label: "2 Copies papier (Format A4, Reliure dos carré collé)", status: "missing", date: null, file: null, required: true },
-        { id: 704, label: "8 Copies numériques (Clés USB en PDF structuré)", status: "missing", date: null, file: null, required: true },
+        { id: 5001, label: "Préparation Présentation Pédagogique (Slides / Abstract)", status: "missing", date: null, file: null, category: 'epreuves_oral' },
+        { id: 5002, label: "Préparation Épreuve Pratique (Cas clinique / Patient)",    status: "missing", date: null, file: null, category: 'epreuves_oral' },
+        { id: 7001, label: "Notice Individuelle (Note de synthèse)",                   status: "missing", date: null, file: null, required: true, category: 'admin_doc' },
+        { id: 7002, label: "Rapport anti-plagiat des publications",                    status: "missing", date: null, file: null, required: true, category: 'admin_doc' },
+        { id: 7003, label: "2 Copies papier (Format A4, Reliure dos carré collé)",    status: "missing", date: null, file: null, required: true, category: 'admin_doc' },
+        { id: 7004, label: "8 Copies numériques (Clés USB en PDF structuré)",         status: "missing", date: null, file: null, required: true, category: 'admin_doc' },
       ]
     }
   ]
@@ -127,7 +129,8 @@ const IconMap = {
   Users: Users,
   Award: Award,
   BrainCircuit: BrainCircuit,
-  MapPin: MapPin
+  MapPin: MapPin,
+  Clock: Clock
 };
 
 // --- COMPOSANTS UI DE BASE ---
@@ -197,8 +200,8 @@ const CoachingEngine = ({ data }) => {
     newTips.push({ type: 'strategy', msg: `Qualité > Quantité : Le jury privilégie un article 1er auteur en Q1/Q2 avec un fort Impact Factor plutôt que dix cas cliniques mineurs.` });
 
     // Checklist Administrative
-    const adminSection = data.sections.find(s => s.id === 'administratif');
-    const adminMissing = adminSection?.items.some(i => i.status !== 'completed');
+    const adminSection = data.sections.find(s => s.id === 'epreuves');
+    const adminMissing = adminSection?.items.some(i => i.id > 7000 && i.status !== 'completed');
     if (adminMissing) {
       newTips.push({ type: 'admin', msg: `Rigueur Administrative : Préparez exactement 2 copies papier avec reliure "dos carré collé" et 8 clés USB contenant des PDF proprement nommés.` });
     }
@@ -239,13 +242,25 @@ const CoachingEngine = ({ data }) => {
 // --- VUE DÉTAIL DE SECTION ---
 const SectionDetail = ({ section, onBack, onUpdateStatus, onAddItem, onDeleteItem, onFileUpload, onRemoveFile }) => {
   const [newItemText, setNewItemText] = useState("");
+  const [newItemCategory, setNewItemCategory] = useState(section.categories?.[0]?.id || '');
   const [uploadingId, setUploadingId] = useState(null);
   const Icon = IconMap[section.iconName] || FileText;
+
+  const categories = section.categories || [];
+  const hasCats = categories.length > 0;
+
+  // Group items by category
+  const grouped = hasCats
+    ? categories.map(cat => ({
+        cat,
+        items: section.items.filter(i => i.category === cat.id)
+      }))
+    : [{ cat: null, items: section.items }];
 
   const handleAddItem = (e) => {
     e.preventDefault();
     if (newItemText.trim()) {
-      onAddItem(section.id, newItemText);
+      onAddItem(section.id, newItemText, newItemCategory || null);
       setNewItemText("");
     }
   };
@@ -260,20 +275,69 @@ const SectionDetail = ({ section, onBack, onUpdateStatus, onAddItem, onDeleteIte
     const file = e.target.files[0];
     if (!file) return;
     setUploadingId(itemId);
-    // Délai artificiel pour le feedback visuel (UX)
     setTimeout(() => {
       onFileUpload(section.id, itemId, file);
       setUploadingId(null);
     }, 1500);
   };
 
+  const ItemRow = ({ item }) => (
+    <div key={item.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between hover:bg-slate-50 transition-colors group gap-4 border-b border-slate-100 last:border-0">
+      <div className="flex items-start md:items-center gap-4 flex-1 pr-4">
+        <button
+          onClick={() => onUpdateStatus(section.id, item.id, nextStatus(item.status))}
+          className="focus:outline-none transform active:scale-95 transition-transform shrink-0 mt-1 md:mt-0"
+        >
+          <Badge status={item.status} />
+        </button>
+        <div className="flex flex-col min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`text-sm font-medium ${item.status === 'completed' ? 'text-slate-400 line-through decoration-slate-300' : 'text-slate-800'}`}>
+              {item.label}
+            </span>
+            {item.required && <span className="text-[10px] uppercase font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100">Requis</span>}
+          </div>
+          {item.date && (
+            <span className="text-xs text-slate-400 mt-1">Validé le {item.date}</span>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center gap-2 md:justify-end">
+        {!item.file ? (
+          <label className={`cursor-pointer p-2 border rounded-md transition-colors flex items-center gap-2 text-xs font-semibold whitespace-nowrap shadow-sm ${uploadingId === item.id ? 'bg-slate-100 text-slate-500 border-slate-200 cursor-wait' : 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100'}`}>
+            {uploadingId === item.id ? (
+              <><Loader2 className="w-4 h-4 animate-spin text-indigo-500" /><span>Envoi...</span></>
+            ) : (
+              <><UploadCloud className="w-4 h-4" /><span>Joindre scan (PDF/Img)</span></>
+            )}
+            <input type="file" className="hidden" disabled={uploadingId === item.id} onChange={(e) => handleLocalUpload(item.id, e)} accept=".pdf,image/*" />
+          </label>
+        ) : (
+          <div className="flex items-center bg-slate-100 rounded-md border border-slate-200 px-3 py-1.5 gap-2 max-w-[200px] shadow-sm">
+            <FileText className="w-4 h-4 text-emerald-600 shrink-0" />
+            <a
+              href={item.file.data}
+              download={item.file.name.includes('.') ? item.file.name : `${item.file.name}.${item.file.type ? item.file.type.split('/')[1] : 'pdf'}`}
+              className="text-xs text-blue-700 font-medium truncate cursor-pointer hover:underline hover:text-blue-900"
+              title="Cliquer pour télécharger"
+            >{item.file.name}</a>
+            <button onClick={() => onRemoveFile(section.id, item.id)} className="p-1 ml-1 rounded hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition-colors shrink-0">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+        <button onClick={() => onDeleteItem(section.id, item.id)} className="p-2 ml-1 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-md transition-all" title="Supprimer">
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300 pb-12">
+      {/* Header */}
       <div className="flex items-center space-x-4 mb-6">
-        <button
-          onClick={onBack}
-          className="p-2 rounded-full hover:bg-slate-200 text-slate-500 transition-colors bg-white border border-slate-200 shadow-sm"
-        >
+        <button onClick={onBack} className="p-2 rounded-full hover:bg-slate-200 text-slate-500 transition-colors bg-white border border-slate-200 shadow-sm">
           <ArrowLeft className="w-6 h-6 text-blue-900" />
         </button>
         <div>
@@ -285,101 +349,93 @@ const SectionDetail = ({ section, onBack, onUpdateStatus, onAddItem, onDeleteIte
         </div>
       </div>
 
-      <Card className="divide-y divide-slate-100 border focus-within:border-blue-300 transition-colors">
-        <div className="bg-slate-50 p-4 border-b border-slate-200 flex justify-between items-center">
-          <h3 className="font-semibold text-slate-700">Composantes de la grille</h3>
-          <span className="text-xs font-medium bg-white px-2 py-1 rounded border border-slate-200 text-slate-500 shadow-sm">
-            {section.items.length} éléments
-          </span>
-        </div>
-
-        {section.items.map((item) => (
-          <div key={item.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between hover:bg-slate-50 transition-colors group gap-4">
-            <div className="flex items-start md:items-center gap-4 flex-1 pr-4">
-              <button
-                onClick={() => onUpdateStatus(section.id, item.id, nextStatus(item.status))}
-                className="focus:outline-none tooltip transform active:scale-95 transition-transform shrink-0 mt-1 md:mt-0"
-              >
-                <Badge status={item.status} />
-              </button>
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`text-sm font-medium ${item.status === 'completed' ? 'text-slate-500 line-through decoration-slate-300' : 'text-slate-800'}`}>
-                    {item.label}
-                  </span>
-                  {item.required && <span className="text-[10px] uppercase font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-100">Requis</span>}
+      {/* Score par catégorie (si section a des catégories avec maxPoints) */}
+      {hasCats && categories.some(c => c.maxPoints) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-2">
+          {categories.filter(c => c.maxPoints).map(cat => {
+            const catItems = section.items.filter(i => i.category === cat.id);
+            const done = catItems.filter(i => i.status === 'completed').length;
+            const pct = catItems.length === 0 ? 0 : Math.round((done / catItems.length) * 100);
+            return (
+              <div key={cat.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-600 leading-tight">{cat.label}</span>
+                  <span className="text-xs font-black text-slate-800 whitespace-nowrap ml-2">Max {cat.maxPoints} pts</span>
                 </div>
-                {item.date && (
-                  <span className="text-xs text-slate-400 mt-1 flex items-center gap-2">
-                    Validé le {item.date}
-                  </span>
-                )}
+                <div className="w-full bg-slate-200 rounded-full h-2 mb-1">
+                  <div className={`${cat.color} h-2 rounded-full transition-all duration-500`} style={{ width: `${pct}%` }}></div>
+                </div>
+                <div className="flex justify-between text-[11px] text-slate-500 font-medium">
+                  <span>{done} / {catItems.length} éléments validés</span>
+                  <span>{pct}%</span>
+                </div>
               </div>
-            </div>
-
-            <div className="flex items-center gap-2 md:justify-end">
-              {!item.file ? (
-                <label className={`cursor-pointer p-2 border rounded-md transition-colors flex items-center gap-2 text-xs font-semibold whitespace-nowrap shadow-sm ${uploadingId === item.id ? 'bg-slate-100 text-slate-500 border-slate-200 cursor-wait' : 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100'}`}>
-                  {uploadingId === item.id ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />
-                      <span>Exportation...</span>
-                    </>
-                  ) : (
-                    <>
-                      <UploadCloud className="w-4 h-4" />
-                      <span>Joindre scan (PDF/Img)</span>
-                    </>
-                  )}
-                  <input type="file" className="hidden" disabled={uploadingId === item.id} onChange={(e) => handleLocalUpload(item.id, e)} accept=".pdf,image/*" />
-                </label>
-              ) : (
-                <div className="flex items-center bg-slate-100 rounded-md border border-slate-200 px-3 py-1.5 gap-2 max-w-[200px] shadow-sm">
-                  <FileText className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <a href={item.file.data} download={item.file.name} target="_blank" rel="noreferrer" className="text-xs text-blue-700 font-medium truncate cursor-pointer hover:underline hover:text-blue-900" title={item.file.name}>
-                    {item.file.name}
-                  </a>
-                  <button
-                    onClick={() => onRemoveFile(section.id, item.id)}
-                    className="p-1 ml-1 rounded hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition-colors shrink-0"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                  {/* Optionnel: Bouton pour visualiser la data base64 stockée ci on le souhaitait */}
-                </div>
-              )}
-
-              <button
-                onClick={() => onDeleteItem(section.id, item.id)}
-                className="p-2 ml-1 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-md transition-all"
-                title="Supprimer la ligne"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        ))}
-
-        <div className="p-4 bg-blue-50/50">
-          <form onSubmit={handleAddItem} className="flex gap-2">
-            <input
-              type="text"
-              value={newItemText}
-              onChange={(e) => setNewItemText(e.target.value)}
-              placeholder="Ajouter une ligne personnalisée..."
-              className="flex-1 px-4 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-sm"
-            />
-            <button
-              type="submit"
-              disabled={!newItemText.trim()}
-              className="px-4 py-2 bg-blue-900 text-white text-sm font-medium rounded-md hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              Ajouter
-            </button>
-          </form>
+            );
+          })}
         </div>
-      </Card>
+      )}
+
+      {/* Items groupés par catégorie */}
+      <div className="space-y-4">
+        {grouped.map(({ cat, items }) => (
+          <Card key={cat?.id || 'default'} className="overflow-hidden">
+            {cat && (
+              <div className={`px-4 py-2.5 flex items-center justify-between border-b border-slate-100`}>
+                <div className="flex items-center gap-2">
+                  <div className={`w-2.5 h-2.5 rounded-full ${cat.color}`}></div>
+                  <span className="text-sm font-bold text-slate-700">{cat.label}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  {cat.maxPoints && (
+                    <span className="text-xs font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200">
+                      Max {cat.maxPoints} pts
+                    </span>
+                  )}
+                  <span className="text-xs text-slate-400">{items.filter(i => i.status === 'completed').length}/{items.length} validés</span>
+                </div>
+              </div>
+            )}
+            <div className="divide-y divide-slate-50">
+              {items.length === 0 && (
+                <p className="px-4 py-3 text-xs text-slate-400 italic">Aucun élément dans cette catégorie.</p>
+              )}
+              {items.map(item => <ItemRow key={item.id} item={item} />)}
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Formulaire d'ajout */}
+      <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+        <form onSubmit={handleAddItem} className="flex flex-col sm:flex-row gap-2">
+          {hasCats && (
+            <select
+              value={newItemCategory}
+              onChange={e => setNewItemCategory(e.target.value)}
+              className="px-3 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-sm bg-white text-slate-700 font-medium sm:w-64 shrink-0"
+            >
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.label}</option>
+              ))}
+            </select>
+          )}
+          <input
+            type="text"
+            value={newItemText}
+            onChange={(e) => setNewItemText(e.target.value)}
+            placeholder="Ajouter un élément personnalisé..."
+            className="flex-1 px-4 py-2 text-sm border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none shadow-sm"
+          />
+          <button
+            type="submit"
+            disabled={!newItemText.trim()}
+            className="px-4 py-2 bg-blue-900 text-white text-sm font-medium rounded-md hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm transition-colors whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4" />
+            Ajouter
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
@@ -492,33 +548,40 @@ const ReportView = ({ data, user }) => {
 
 // --- SIMULATEUR ---
 const Simulateur = () => {
-  const [pubs, setPubs] = useState(5);
-  const [theses, setTheses] = useState(2);
-  const [exp, setExp] = useState(3);
+  const [exp, setExp] = useState(4);
+  const [pubsPoints, setPubsPoints] = useState(7);
+  const [commsPoints, setCommsPoints] = useState(3);
+  const [pedagoPoints, setPedagoPoints] = useState(10);
+  const [respPoints, setRespPoints] = useState(10);
 
-  const scorePubs = Math.min(pubs * 3.33, 50);
-  const scoreTheses = Math.min(theses * 5, 25);
-  const scoreExp = Math.min(exp * 2.5, 25);
+  // Ancienneté (8 pts pour 4 ans, +2 pts par an sup. max 20)
+  const scoreS1 = exp >= 4 ? Math.min(8 + (exp - 4) * 2, 20) : exp * 2;
+  // Recherche (Pubs / 14 + Comms / 6)
+  const scoreS2 = pubsPoints + commsPoints;
+  // Pédagogie (/20)
+  const scoreS3 = pedagoPoints;
+  // Responsabilités (/20)
+  const scoreS4 = respPoints;
   
-  let totalScore = Math.round(scorePubs + scoreTheses + scoreExp);
-  if (totalScore > 100) totalScore = 100;
+  const scoreTotalBrut = scoreS1 + scoreS2 + scoreS3 + scoreS4; // /80
+  const totalScorePercent = Math.round((scoreTotalBrut / 80) * 100);
 
   let resultClass = '';
   let barClass = '';
   let feedbackText = '';
 
-  if (totalScore < 40) {
+  if (totalScorePercent < 50) {
     resultClass = 'text-rose-500';
     barClass = 'bg-rose-500';
-    feedbackText = "Dossier embryonnaire. Focalisez-vous massivement sur la publication en 1er auteur.";
-  } else if (totalScore < 70) {
+    feedbackText = "Dossier préliminaire. Consolidez l'ancienneté et visez des publications Q1 à fort impact factor.";
+  } else if (totalScorePercent < 75) {
     resultClass = 'text-yellow-500';
     barClass = 'bg-yellow-500';
-    feedbackText = "Dossier intermédiaire. Consolidez l'encadrement et variez les types de publications.";
+    feedbackText = "Dossier sérieux. Maximisez la composante 'qualitative' des communications et variez vos implications pédagogiques.";
   } else {
     resultClass = 'text-emerald-500';
     barClass = 'bg-emerald-500';
-    feedbackText = "Dossier très compétitif ! Peaufinez la rédaction de votre polycopié et préparez l'oral.";
+    feedbackText = "Excellent JORT ! Votre total par rubriques est optimal. Structurez vos 10 fiches d'auto-analyse sereinement.";
   }
 
   return (
@@ -526,41 +589,56 @@ const Simulateur = () => {
       <div className="absolute top-0 right-0 -mr-16 -mt-16 text-9xl opacity-10">⏱️</div>
       <div className="mb-8 relative z-10">
         <h2 className="text-3xl font-bold flex items-center gap-2">
-          <span>🧮</span> Simulateur Rapide de Potentiel
+          <span>🧮</span> Simulateur Rapide JORT 2021
         </h2>
-        <p className="mt-4 text-blue-200 max-w-3xl text-lg">Testez la solidité de votre dossier. Cet outil interactif fournit une estimation basique de votre préparation basée sur des métriques clés. Modifiez les valeurs pour voir l'impact immédiat sur votre "Score de Prêtitude".</p>
+        <p className="mt-4 text-blue-200 max-w-3xl text-lg">Testez la solidité de votre dossier selon la grille officielle détaillée. (Coefficients = 1 pour les 4 grandes mentions).</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
         <div className="space-y-6 bg-white/10 p-6 rounded-2xl backdrop-blur-sm">
           <div>
-            <label className="block text-sm font-medium text-blue-100 mb-2">Publications (1er/Dernier Auteur) - Indexées</label>
-            <input type="range" min="0" max="30" value={pubs} className="w-full h-2 bg-blue-300 rounded-lg appearance-none cursor-pointer" onChange={(e) => setPubs(parseInt(e.target.value))} />
-            <div className="flex justify-between text-xs text-blue-200 mt-1">
-              <span>0</span><span className="font-bold text-white text-base">{pubs} article{pubs > 1 ? 's' : ''}</span><span>30+</span>
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-blue-100 mb-2">Thèses/Mémoires Encadrés (Validés)</label>
-            <input type="range" min="0" max="15" value={theses} className="w-full h-2 bg-blue-300 rounded-lg appearance-none cursor-pointer" onChange={(e) => setTheses(parseInt(e.target.value))} />
-            <div className="flex justify-between text-xs text-blue-200 mt-1">
-              <span>0</span><span className="font-bold text-white text-base">{theses} thèse{theses > 1 ? 's' : ''}</span><span>15+</span>
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-blue-100 mb-2">Années d'Ancienneté (Post-Assistanat)</label>
+            <label className="block text-sm font-medium text-blue-100 mb-2">I - Ancienneté dans le grade (8 pts / 4 ans)</label>
             <input type="range" min="0" max="10" value={exp} className="w-full h-2 bg-blue-300 rounded-lg appearance-none cursor-pointer" onChange={(e) => setExp(parseInt(e.target.value))} />
             <div className="flex justify-between text-xs text-blue-200 mt-1">
-              <span>0</span><span className="font-bold text-white text-base">{exp} an{exp > 1 ? 's' : ''}</span><span>10+</span>
+              <span>0 an</span><span className="font-bold text-white text-base">{exp} an{exp > 1 ? 's' : ''} ({scoreS1}/20)</span><span>10+ ans</span>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-blue-100 mb-2">II - Publications (Qualité Scopus / IF) - Max 14 pts</label>
+            <input type="range" step="0.5" min="0" max="14" value={pubsPoints} className="w-full h-2 bg-blue-300 rounded-lg appearance-none cursor-pointer" onChange={(e) => setPubsPoints(parseFloat(e.target.value))} />
+            <div className="flex justify-between text-xs text-blue-200 mt-1">
+              <span>0 pt</span><span className="font-bold text-white text-base">{pubsPoints}/14 pts</span><span>14 pts</span>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-blue-100 mb-2">II - Communications (Quanti + Quali) - Max 6 pts</label>
+            <input type="range" step="0.5" min="0" max="6" value={commsPoints} className="w-full h-2 bg-blue-300 rounded-lg appearance-none cursor-pointer" onChange={(e) => setCommsPoints(parseFloat(e.target.value))} />
+            <div className="flex justify-between text-xs text-blue-200 mt-1">
+              <span>0 pt</span><span className="font-bold text-white text-base">{commsPoints}/6 pts</span><span>6 pts</span>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-blue-100 mb-2">III - Activités Pédagogiques (Documents, Séminaires...)</label>
+            <input type="range" min="0" max="20" value={pedagoPoints} className="w-full h-2 bg-blue-300 rounded-lg appearance-none cursor-pointer" onChange={(e) => setPedagoPoints(parseInt(e.target.value))} />
+            <div className="flex justify-between text-xs text-blue-200 mt-1">
+              <span>0</span><span className="font-bold text-white text-base">{pedagoPoints}/20 pts</span><span>20 pts</span>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-blue-100 mb-2">IV - Responsabilités (Doyen, Labo, etc.)</label>
+            <input type="range" min="0" max="20" value={respPoints} className="w-full h-2 bg-blue-300 rounded-lg appearance-none cursor-pointer" onChange={(e) => setRespPoints(parseInt(e.target.value))} />
+            <div className="flex justify-between text-xs text-blue-200 mt-1">
+              <span>0</span><span className="font-bold text-white text-base">{respPoints}/20 pts</span><span>20 pts</span>
             </div>
           </div>
         </div>
 
         <div className="flex flex-col justify-center items-center bg-white p-8 rounded-2xl text-slate-800 text-center shadow-inner">
-          <h4 className="text-sm uppercase tracking-wider font-semibold text-slate-500 mb-2">Indice de Compétitivité Estimé</h4>
-          <div className={`text-6xl font-extrabold mb-4 ${resultClass}`}>{totalScore}%</div>
+          <h4 className="text-sm uppercase tracking-wider font-semibold text-slate-500 mb-2">Score Estimé JORT</h4>
+          <div className={`text-6xl font-extrabold mb-2 ${resultClass}`}>{totalScorePercent}%</div>
+          <div className="text-xl font-bold text-slate-400 mb-4">soit {scoreTotalBrut} / 80 points</div>
           <div className="w-full bg-slate-200 rounded-full h-4 mb-4 overflow-hidden">
-            <div className={`${barClass} h-4 rounded-full transition-all duration-500`} style={{ width: `${totalScore}%` }}></div>
+            <div className={`${barClass} h-4 rounded-full transition-all duration-500`} style={{ width: `${totalScorePercent}%` }}></div>
           </div>
           <p className="text-sm font-medium text-slate-600">{feedbackText}</p>
         </div>
@@ -704,11 +782,33 @@ export default function App() {
     initDB();
   }, []);
 
+  // Migrates old saved data to include new fields (categories, item.category)
+  const migrateData = (saved) => {
+    const migrated = { ...saved };
+    migrated.sections = saved.sections.map(savedSection => {
+      const template = INITIAL_DATA.sections.find(s => s.id === savedSection.id);
+      if (!template) return savedSection;
+      // Inject categories from template if missing
+      const withCats = savedSection.categories ? savedSection : { ...savedSection, categories: template.categories };
+      // Inject category per item from template if missing
+      const withItemCats = {
+        ...withCats,
+        items: withCats.items.map(item => {
+          if (item.category) return item;
+          const tItem = template.items.find(ti => ti.id === item.id);
+          return tItem ? { ...item, category: tItem.category } : item;
+        })
+      };
+      return withItemCats;
+    });
+    return migrated;
+  };
+
   const loadUserDossier = async (email) => {
     try {
       const { data: remoteData, error } = await supabase.from('dossiers').select('data').eq('email', email).single();
       if (remoteData && remoteData.data) {
-        setData(remoteData.data);
+        setData(migrateData(remoteData.data));
       } else {
         setData(INITIAL_DATA);
         await supabase.from('dossiers').insert({ email, data: INITIAL_DATA });
@@ -815,7 +915,7 @@ export default function App() {
     }
   };
 
-  const handleAddItem = (sectionId, text) => {
+  const handleAddItem = (sectionId, text, category) => {
     if (!data) return;
     const newData = {
       ...data,
@@ -827,7 +927,8 @@ export default function App() {
             id: Date.now(),
             label: text,
             status: 'missing',
-            date: new Date().toLocaleDateString('fr-FR')
+            date: new Date().toLocaleDateString('fr-FR'),
+            category: category || null,
           }]
         };
       })
